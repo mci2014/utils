@@ -25,7 +25,7 @@
  * @return 0  success
  *         -1 fail
  */
-inline static void List_init(UTIL_LIST *list) {
+inline void List_init(UTIL_LIST *list) {
 
     list->first = NULL;
     list->last  = NULL;
@@ -37,7 +37,7 @@ inline static void List_init(UTIL_LIST *list) {
  * @param list The list descriptor to de-init
  *
  */
-inline static void List_deinit(UTIL_LIST *list) {
+inline void List_deinit(UTIL_LIST *list) {
 
     list->count = 0;
     list->first = NULL;
@@ -50,7 +50,7 @@ inline static void List_deinit(UTIL_LIST *list) {
  * @return the elements number
  *
  */
-inline static int List_nelem(UTIL_LIST *list) {
+inline int List_nelem(UTIL_LIST *list) {
     return list->count;
 }
 
@@ -60,7 +60,7 @@ inline static int List_nelem(UTIL_LIST *list) {
  * @return the first item hold in the list
  *
  */
-inline static void *List_head(UTIL_LIST *list) {
+inline void *List_head(UTIL_LIST *list) {
     return list->first;
 }
 
@@ -70,7 +70,7 @@ inline static void *List_head(UTIL_LIST *list) {
  * @return the last item hold in the list
  *
  */
-inline static void *List_tail(UTIL_LIST *list) {
+inline void *List_tail(UTIL_LIST *list) {
     return list->last;
 }
 
@@ -81,7 +81,7 @@ inline static void *List_tail(UTIL_LIST *list) {
  *         1-->Empty
  *
  */
-inline static int List_empty(UTIL_LIST *list) {
+inline int List_empty(UTIL_LIST *list) {
     return (list->first == NULL);
 }
 
@@ -91,7 +91,7 @@ inline static int List_empty(UTIL_LIST *list) {
  * @param list The list where item add to
  *
  */
-inline static void List_addTail(UTIL_LIST *list, void *item) {
+inline void List_addTail(UTIL_LIST *list, void *item) {
 
     // Empty list
     if (list->first == NULL) {
@@ -115,7 +115,9 @@ inline static void List_addTail(UTIL_LIST *list, void *item) {
  * @param list The list where item add to
  *
  */
-inline static void List_addHead(UTIL_LIST *list, void *item) {
+inline void List_addHead(UTIL_LIST *list, void *item) {
+
+    printf ("Adding itel %p to %p\n", item, list);
 
     //Empty list
     if (list->first == NULL) {
@@ -136,7 +138,7 @@ inline static void List_addHead(UTIL_LIST *list, void *item) {
  * @return The item that next to the current item
  *
  */
-inline static void *List_next(void *item) {
+inline void *List_next(void *item) {
     return *((void **)item);
 }
 
@@ -146,7 +148,7 @@ inline static void *List_next(void *item) {
  * @return The item that be deleted from the list
  *
  */
-inline static void *List_delFromHead(UTIL_LIST *list) {
+inline void *List_delFromHead(UTIL_LIST *list) {
 
     void **head = list->first;
 
@@ -166,7 +168,7 @@ inline static void *List_delFromHead(UTIL_LIST *list) {
  * @param list The list where item deleted from
  * @return The item that be deleted from the list
  */
-inline static void *List_delFromTail(UTIL_LIST *list) {
+inline void *List_delFromTail(UTIL_LIST *list) {
 
     void **tail = list->last;
     void **prev = (void **)list;
@@ -196,7 +198,7 @@ inline static void *List_delFromTail(UTIL_LIST *list) {
  * @param item The item that need to be deleted
  * @return the removed item
  */
-inline static void *List_del(UTIL_LIST *list, void *item) {
+inline void *List_del(UTIL_LIST *list, void *item) {
 
     void **prev  = (void **)list;
     void **curr  = *prev;
