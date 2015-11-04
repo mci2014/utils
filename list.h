@@ -29,7 +29,7 @@ extern "C" {
 
 typedef struct UTIL_LIST {
 
-    int   count;
+    int   nelem;
     void  **first;
     void  **last;
 
@@ -55,6 +55,9 @@ inline void List_addTail(UTIL_LIST *list, void *item);
 
 // Add item to head
 inline void List_addHead(UTIL_LIST *list, void *item);
+
+// Get next item
+inline void *List_next(void *item);
 
 // Delete item from Head
 inline void *List_delFromHead(UTIL_LIST *list);

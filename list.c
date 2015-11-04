@@ -29,7 +29,7 @@ inline void List_init(UTIL_LIST *list) {
 
     list->first = NULL;
     list->last  = NULL;
-    list->count = 0;
+    list->nelem = 0;
 }
 
 /** De-init a list descriptor
@@ -39,9 +39,16 @@ inline void List_init(UTIL_LIST *list) {
  */
 inline void List_deinit(UTIL_LIST *list) {
 
-    list->count = 0;
+    list->nelem = 0;
     list->first = NULL;
     list->last  = NULL;
+}
+
+/** Return the header of the list
+ *  @param list The requested list
+ */
+inline void *List_head(UTIL_LIST *list) {
+    return list->first;
 }
 
 /** Return the number of elements hold in the list
@@ -51,17 +58,7 @@ inline void List_deinit(UTIL_LIST *list) {
  *
  */
 inline int List_nelem(UTIL_LIST *list) {
-    return list->count;
-}
-
-/** Return the header of the list
- *
- * @param list The requested list
- * @return the first item hold in the list
- *
- */
-inline void *List_head(UTIL_LIST *list) {
-    return list->first;
+    return list->nelem;
 }
 
 /** Return the tail of the list
@@ -85,7 +82,7 @@ inline int List_empty(UTIL_LIST *list) {
     return (list->first == NULL);
 }
 
-/** At an item to the tail of the given list
+/** Add an item to the tail of the given list
  *
  * @param item The item to be added
  * @param list The list where item add to
@@ -105,7 +102,7 @@ inline void List_addTail(UTIL_LIST *list, void *item) {
 
     // The linkage of the added item is set to NULL
     (*(void **)item) = NULL;
-    list->count++;
+    list->nelem++;
 
 }
 
@@ -117,8 +114,6 @@ inline void List_addTail(UTIL_LIST *list, void *item) {
  */
 inline void List_addHead(UTIL_LIST *list, void *item) {
 
-    printf ("Adding itel %p to %p\n", item, list);
-
     //Empty list
     if (list->first == NULL) {
 
@@ -129,7 +124,7 @@ inline void List_addHead(UTIL_LIST *list, void *item) {
         list->first = item; // link the first item
     }
 
-    list->count++;
+    list->nelem++;
 }
 
 /** Return the item that next to current
@@ -156,9 +151,9 @@ inline void *List_delFromHead(UTIL_LIST *list) {
         if ((list->first = *head) == NULL) {
             list->last = NULL;
         }
-    }
 
-    list->count--;
+        list->nelem--;
+    }
 
     return head;
 }
@@ -171,25 +166,7 @@ inline void *List_delFromHead(UTIL_LIST *list) {
 inline void *List_delFromTail(UTIL_LIST *list) {
 
     void **tail = list->last;
-    void **prev = (void **)list;
-    void **curr = *prev;
-
-    while (curr != NULL) {
-        // It's the tail
-        if (curr == tail) {
-            // Break the link
-            *prev = NULL;
-            break;
-        }
-
-        // Not found, update
-        prev = curr;
-        curr = *prev;
-    }
-
-    list->count--;
-
-    return tail;
+    return List_del(list, tail);
 }
 
 /** Delete a specific item from the given list
@@ -200,27 +177,36 @@ inline void *List_delFromTail(UTIL_LIST *list) {
  */
 inline void *List_del(UTIL_LIST *list, void *item) {
 
-    void **prev  = (void **)list;
-    void **curr  = *prev;
+    void **prev;
+    void **curr;
+
+    prev = list->first;
+    curr = prev;
 
     while (curr != NULL) {
-        // Fount the specific item
+        // Found the target item
         if (curr == item) {
-            // Break the link
             *prev = *curr;
 
-            // it's the last one
+            // if it's the last item
             if (list->last == curr) {
                 list->last = prev;
             }
+
+            // if it's the last one and only one
+            if (list->last == curr &&
+                    list->first == curr) {
+                list->last  = NULL;
+                list->first = NULL;
+            }
+
+            list->nelem--;
             return item;
         }
-        //Not found, update
+        // Not found
         prev = curr;
-        curr = *prev;
+        curr = *((void **)curr);
     }
-
-    list->count--;
 
     return NULL;
 }
