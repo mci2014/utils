@@ -16,6 +16,9 @@
 
 #include "list.h"
 
+// Using global list
+static UTIL_LIST util_list;
+
 typedef struct myStruct {
 
     LINK_LIST;
@@ -24,28 +27,37 @@ typedef struct myStruct {
 
 void printListElem(UTIL_LIST *list) {
 
+    int nelem = list->nelem;
     myStruct *s = List_head(list);
+
+    printf("\n\n **** Number of Elements (%d) ****\n\n", nelem);
+
+    if (nelem == 0) {
+        printf("(nil)\n\n");
+    }
+
     while (s != NULL) {
-        printf ("Current item is %p and it's elem is %d\n",
-                s, ((myStruct *)s)->number);
+        printf("|%p(%d)|-->", s, ((myStruct *)s)->number);
         s = List_next(s);
+
+        if (s == NULL) {
+            printf("(nil)\n\n");
+        }
     }
 }
-
-// Using global list
-static UTIL_LIST util_list;
 
 int main() {
 
     int i = 0;
-    // Init the list
+
+    //Normal case
     List_init(&util_list);
 
-    myStruct *s = NULL;
     myStruct *head = NULL;
     myStruct *tail = NULL;
-    myStruct *temp = NULL;
+    myStruct *curr = NULL;
 
+    myStruct *s = NULL;
 
     // Add to tail testing
     for (i = 0; i < 10; i++) {
@@ -71,8 +83,7 @@ int main() {
     // Check the list for head adding
     printListElem(&util_list);
 
-    printf("currently list %p has %d elements\n", &util_list, util_list.nelem);
-
+    printf("Deleting from head...\n");
     // Deleting from head test
     head = List_delFromHead(&util_list);
     printf ("The item deleted from head is %p and it's number is %d\n",
@@ -81,33 +92,37 @@ int main() {
     free(head);
     head = NULL;
 
+    printf("After head has been removed");
+    printListElem(&util_list);
+
+    printf("Deleting from tail using List_del...\n");
     // Deleting from tail test
     tail = (myStruct *)List_tail(&util_list);
-    printf ("The item deleted from tail is %p and it's number is %d\n",
-            tail, tail->number);
 
     List_del(&util_list, tail);
     free(tail);
 
+    printf("After tail has been removed");
     printListElem(&util_list);
 
 
-    printf("Deleting from tail!!!\n\n");
-
+    printf("Deleting from tail using List_delFromTail...\n");
     List_delFromTail(&util_list);
+
+    printf("After tail has been removed");
     printListElem(&util_list);
 
     printf("Before clear list the num of elements is %d\n", util_list.nelem);
-    // Clear the list
-    printf("Clear the list!!\n\n\n");
 
-    myStruct* curr;
+    // Clear the list
+    printf("Clear the list!! using List_delFromTail\n\n\n");
     while ((curr = List_delFromTail(&util_list)) != NULL) {
         printf ("curr is %p\n", curr);
         free(curr);
         curr = NULL;
     }
 
+    //printf("Clear the list!! using List_delFromHead\n\n\n");
     //while ((curr = List_delFromHead(&util_list)) != NULL) {
     //     printf ("curr is %p\n", curr);
     //     free(curr);
