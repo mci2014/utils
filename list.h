@@ -21,6 +21,7 @@
 #define  LINK_LIST LINKAGE_TYPE LINK_LIST
 
 /* Type definitions */
+/* Private */
 typedef void **LINKAGE_TYPE;
 
 #if defined (__cplusplus)
