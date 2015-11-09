@@ -29,20 +29,6 @@ void DQUEUE_init(DQUEUE_T *dqueue) {
     dqueue->DQUEUE_link.nelem = 0;
 }
 
-/* Destory the douly linked queue
- * @param dqueue The Doubly linked queue which is need to be destoried
- * @Note Before destory the dqueue make sure the linked item is no longer
- * needed.
- * TODO: Do we really need a destory interface ?
- */
-void DQUEUE_destory(DQUEUE_T *dqueue) {
-    assert(dqueue->DQUEUE_link.nelem > 0);
-
-    dqueue->DQUEUE_link.prev = (DQUEUE_LINKAGE_TYPE *)dqueue;
-    dqueue->DQUEUE_link.next = (DQUEUE_LINKAGE_TYPE *)dqueue;
-    dqueue->DQUEUE_link.nelem = 0;
-}
-
 /* See if the given queue is empty
  * @param dqueue The requested Doubly linked queue
  * @return 1 (empty)
@@ -61,7 +47,7 @@ int DQUEUE_empty(DQUEUE_T *dqueue) {
  * @return Number of elements that dqueue hold
  */
 int DQUEUE_count(DQUEUE_T *dqueue) {
-    return (DQUEUE_LINKAGE_TYPE *)dqueue->nelem;
+    return ((DQUEUE_LINKAGE_TYPE *)dqueue)->nelem;
 }
 
 /* Enqueue an element to the given queue descriptor
@@ -88,12 +74,13 @@ int DQUEUE_enqueue(DQUEUE_T *dqueue, void *item) {
         return -1;
     }
 
-    ((DQUEUE_LINKAGE_TYPE *)item)->next = dqueue->DQUEUE_link.next;
-    ((DQUEUE_LINKAGE_TYPE *)item)->prev = (DQUEUE_LINKAGE_TYPE *)dqueue;
-    (DQUEUE_LINKAGE_TYPE *)dqueue->next->prev = ((DQUEUE_LINKAGE_TYPE *)item);
-    (DQUEUE_LINKAGE_TYPE *)dqueue->next = ((DQUEUE_LINKAGE_TYPE *)item);
+    ((DQUEUE_LINKAGE_TYPE *)item)->prev = dqueue->DQUEUE_link.prev;
+    ((DQUEUE_LINKAGE_TYPE *)item)->next = (DQUEUE_LINKAGE_TYPE *)dqueue;
+    ((DQUEUE_LINKAGE_TYPE *)dqueue)->prev->next = ((DQUEUE_LINKAGE_TYPE *)item);
+    ((DQUEUE_LINKAGE_TYPE *)dqueue)->prev = ((DQUEUE_LINKAGE_TYPE *)item);
 
     ((DQUEUE_LINKAGE_TYPE *)dqueue)->nelem++;
+
     return 0;
 }
 
@@ -121,13 +108,82 @@ void *DQUEUE_dequeue(DQUEUE_T *dqueue) {
         return NULL;
     }
 
-    temp = ((DQUEUE_LINKAGE_TYPE *)queue)->prev;
-    temp->prev->next = temp->next;
+    temp = ((DQUEUE_LINKAGE_TYPE *)dqueue)->next;
     temp->next->prev = temp->prev;
+    temp->prev->next = temp->next;
 
     // for the safe of `orphan` remove
-    temp->prev = temp;
     temp->next = temp;
+    temp->prev = temp;
+
+    ((DQUEUE_LINKAGE_TYPE *)dqueue)->nelem--;
 
     return temp;
+}
+
+/* Return the first element holds in the queue
+ *
+ * @param dqueue the queue descriptor from which to get the first element
+ *
+ * @return the first element in the queue
+ */
+void *DQUEUE_first(DQUEUE_T *dqueue) {
+
+    assert(dqueue->DQUEUE_link.prev != NULL);
+    assert(dqueue->DQUEUE_link.next != NULL);
+
+    // The queue is not even initialised
+    if(dqueue->DQUEUE_link.prev == NULL ||
+        dqueue->DQUEUE_link.next == NULL)
+    {
+        return NULL;
+    }
+
+    DQUEUE_LINKAGE_TYPE *temp = ((DQUEUE_LINKAGE_TYPE *)dqueue)->next;
+
+    return temp == (DQUEUE_LINKAGE_TYPE *)dqueue ? NULL : temp;
+}
+
+/* Return the first element holds in the queue
+ *
+ * @param dqueue the queue descriptor from which to get the first element
+ *
+ * @return the first element in the queue
+ */
+void *DQUEUE_last(DQUEUE_T *dqueue) {
+
+    assert(dqueue->DQUEUE_link.prev != NULL);
+    assert(dqueue->DQUEUE_link.next != NULL);
+
+    // The queue is not even initialised
+    if(dqueue->DQUEUE_link.prev == NULL ||
+        dqueue->DQUEUE_link.next == NULL)
+    {
+        return NULL;
+    }
+
+    DQUEUE_LINKAGE_TYPE *temp = ((DQUEUE_LINKAGE_TYPE *)dqueue)->prev;
+
+    return temp == (DQUEUE_LINKAGE_TYPE *)dqueue ? NULL : temp;
+}
+
+/* Get the element that next to the item
+ *
+ * @param item The given item it a queue
+ *
+ * @return the element that next to item
+ */
+void *DQUEUE_next(void *item) {
+
+    assert(((DQUEUE_LINKAGE_TYPE *)item)->prev != NULL);
+    assert(((DQUEUE_LINKAGE_TYPE *)item)->next != NULL);
+
+    // The queue is not even initialised
+    if(((DQUEUE_LINKAGE_TYPE *)item)->prev == NULL ||
+        ((DQUEUE_LINKAGE_TYPE *)item)->next == NULL)
+    {
+        return NULL;
+    }
+
+    return ((DQUEUE_LINKAGE_TYPE *)item)->next;
 }

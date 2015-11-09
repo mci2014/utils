@@ -38,9 +38,6 @@ typedef struct {
 // Doubly linked queue init
 void DQUEUE_init(DQUEUE_T *dqueue);
 
-// Doubly linked queue destory
-void DQUEUE_destory(DQUEUE_T *dqueue);
-
 // If the queue is empty?
 int DQUEUE_empty(DQUEUE_T *dqueue);
 
@@ -53,9 +50,17 @@ int DQUEUE_enqueue(DQUEUE_T *dqueue, void *item);
 // Dequeue(from head) a item from the given queue
 void *DQUEUE_dequeue(DQUEUE_T *dqueue);
 
+// Return the first element in the queue
+void *DQUEUE_first(DQUEUE_T *dqueue);
+
+// Return the last element in the queue
+void *DQUEUE_last(DQUEUE_T *dqueue);
+
+// Return the element that next to item
+void *DQUEUE_next(void *item);
+
 #if defined (__cplusplus)
 }
 #endif
-
 
 #endif

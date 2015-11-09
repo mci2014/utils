@@ -20,8 +20,8 @@
  */
 #define  LINK_LIST LINKAGE_TYPE LINK_LIST
 
-/* Type definitions */
 /* Private */
+/* Outsider have no ideal what LINK_LIST really is */
 typedef void **LINKAGE_TYPE;
 
 #if defined (__cplusplus)
