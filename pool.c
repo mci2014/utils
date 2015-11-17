@@ -191,4 +191,18 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
     return result;
 }
 
+/*******************************************************************************
+ @Description
+
+ Free an Object previously allocated from an Object Pool.
+
+ @Input	    pPool      : Object Pool pointer.
+
+ @Output    pObj       : Handle to the object to be freed.
+
+ @Return    0 for successed others indicate error occured
+*******************************************************************************/
+int Pool_free(Pool * const pPool, void * const pObj) {
+
+}
 
