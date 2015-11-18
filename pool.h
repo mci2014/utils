@@ -34,19 +34,19 @@ struct Buffer {
 
 struct Object {
     struct Object *pNextObj;
-}
+};
 
 typedef struct Pool {
 
     char *pName;
-    uint32 objSize;                        //size of each object in the pool
-    uint32 growSize;
+    uint32_t objSize;                        //size of each object in the pool
+    uint32_t growSize;
     struct Buffer *pBufs;
     struct Object *pObjs;
 } Pool;
 
 // Pool Create
-int Pool_create(const char * pName, uint32 objSize, Pool ** const ppPool);
+int Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool);
 
 // Pool destory
 int Pool_destory(Pool * const pPool);

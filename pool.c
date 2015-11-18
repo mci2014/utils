@@ -11,9 +11,10 @@
  *
  *****************************************************************************/
 
-#include "pool.h"
-
 #include <string.h>
+#include <assert.h>
+
+#include "pool.h"
 
 /******************************************************************************
  @Description
@@ -29,7 +30,7 @@
  @Return    0 for successed others indicate error occured
 
 *******************************************************************************/
-int Pool_create(const char * pName, uint32 objSize, Pool ** const ppPool) {
+int Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool) {
 
     Pool * pPool    = NULL;
     uint32_t result = 0;
@@ -47,7 +48,7 @@ int Pool_create(const char * pName, uint32 objSize, Pool ** const ppPool) {
     assert(pPool != NULL);
     if (pPool == NULL) {
         // malloc failed
-        result = -2
+        result = -2;
         return result;
     }
 
@@ -145,7 +146,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
     // First call
     if (pPool->pObjs == NULL) {
 
-        pBuf = (Buffer *)malloc((pPool->objSize + ALIGNMENT) * pPool->growSize
+        pBuf = (struct Buffer *)malloc((pPool->objSize + ALIGNMENT) * pPool->growSize
                                                              + sizeof(struct Buffer));
         assert(pBuf != NULL);
         if (pBuf == NULL) {
@@ -162,7 +163,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
             uint8_t *pTemp = NULL;
 
             pObj = (struct Object *)(((uint8_t *)(pBuf + 1)) +
-                                    (index * (pPool->objSize + ALIGNMENT));
+                                    (index * (pPool->objSize + ALIGNMENT)));
 
             // 64bit align
             pTemp = (uint8_t *)pObj;
