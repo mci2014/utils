@@ -142,7 +142,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
         return result;
     }
 
-    // First use
+    // First call
     if (pPool->pObjs == NULL) {
 
         pBuf = (Buffer *)malloc((pPool->objSize + ALIGNMENT) * pPool->growSize
@@ -166,7 +166,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
 
             // 64bit align
             pTemp = (uint8_t *)pObj;
-            
+
             // Not 64 aligned
             if ((uintptr_t)pTemp & ALIGNMENT) {
                 pTemp += ((ALIGNMENT + 1) - ((uintptr_t)pTemp & ALIGNMENT));
@@ -180,7 +180,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
 
     if (pPool->pObjs == NULL) {
         // Invalid state
-        result = -1;
+        result = -3;
         return result;
     }
 
@@ -198,11 +198,27 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
 
  @Input	    pPool      : Object Pool pointer.
 
- @Output    pObj       : Handle to the object to be freed.
+ @Output    hObj       : Handle to the object to be freed.
 
  @Return    0 for successed others indicate error occured
 *******************************************************************************/
-int Pool_free(Pool * const pPool, void * const pObj) {
+int Pool_free(Pool * const pPool, void * const hObj) {
 
+    struct Object * pObj = NULL;
+    uint32_t result = 0;
+
+    assert(pPool != NULL);
+    assert(hObj != NULL);
+    if (pPool == NULL || hObj == NULL) {
+        // Invalid param
+        result = -1;
+        return result;
+    }
+
+    pObj = (struct Object *)hObj;
+    pObj->pNextObj = pPool->pObjs;
+    pPool->pObjs = pObj;
+
+    return result;
 }
 
