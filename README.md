@@ -14,14 +14,11 @@ Utils in c that working with Linux
 ### How to
 
 First of all, Add macro `LINK_LIST` at the very beginning of the struct that you want to be linkable.
-
 --------------------------
     #define  LINK_LIST LINKAGE_TYPE LINK_LIST
     typedef void **LINKAGE_TYPE;
 --------------------------
-
 As one can see, `LINK_LIST` is defined as `(void **)`. Since `LINK_LIST` placed at the very beginning of a struct, so when we have the address(pointer) of a target struct we also have the **entry** of a linked list of this given struct.
-
 --------------------------
 
     typedef struct UTIL_LIST {
@@ -33,7 +30,6 @@ As one can see, `LINK_LIST` is defined as `(void **)`. Since `LINK_LIST` placed 
     } UTIL_LIST ;
 
 ------------------------
-
 Above is what `UTIL_LIST` looks like, the tricky part is `first` and `last` is pointer to pointer, we'll use this trick implement linkage function between list items.
 
 So, `first` and `last` is point to the actual item from a linked list. More specifically, the current `item` is typde defined as `(void **)item`, with the help of **pointer to pointer**, we can using (*(void **)item) as the `next_item` next to `item`.
