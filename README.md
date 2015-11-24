@@ -44,6 +44,48 @@ So If we want to retrive the `item` next to the current, we can simply `(*(void 
 
 ### How to
 
+The usage of this Doubly linked queue is much like the `UTIL_LIST` above. First of all, put macro `DLINK_QUEUE` at the very beginning of the struct that you want to be manipulated like a queue.
+
+It looks like:
+
+The `QListableStruct` could be decoded pic, input buffer (waiting for decode). Any thing that need to be served `FIFO`.
+
+```
+typedef struct Queue_Listable_Struct {
+
+    // Make sure the DLINK_QUEUE place at the very beginning
+    DLINK_QUEUE;
+    int data;
+} QListableStruct;
+```
+
+So place macro `DQUEUE_T` into a given struct is like putting a doubly linked queue to the struct. It's like:
+
+```
+typedef struct Test_Context {
+    int data;
+    DQUEUE_T dq;    
+} Context;
+```
+Keep in my mind:
+
+- Dequeue is always from the head enqueue is always from the tail A.K.A **FIFO**
+- In an empty queue, the `prev` and `next` both pointed to the `QUEUE_T *dqueue` which is passed from outside.
+- The `prev` field of the `QUEUE_T *dqueue`(treat this as `header point` which contains no data) is pointed to the tail
+- The `next` field of the tail(last item in the queue) is pointed to the `header`. 
+
+For security reasons:
+
+When we removing an item from a queue and returning it, we should modify it's `prev` and `next` field and making them point to the item itself. **CAUSE** if uplayer has a sane item from the queue, it could abuse the `prev` and `next` fields. 
+
+So it's better to:
+```
+// for the safe of `orphan` remove
+temp->next = temp;
+temp->prev = temp;
+```
+Before we return the item.
+
 ## Objects Pool
 
 ## How to
