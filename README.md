@@ -88,12 +88,36 @@ Before we return the item.
 
 ## Objects Pool
 
+## Why
+
+It is effective in situations where the cost of initializing a instance is high, the rate of instantiation of a certain type is high, and the number of instantiations in use at any one time is low. For example a `hash table entity`.
+
 ## How to
 
+Object pools (otherwise known as resource pools) are used to manage the object caching. A client with access to a Object pool can avoid creating a new Objects by simply asking the pool for one that has already been instantiated instead. In this case we have restrict number of objects created in the Pool.
+
+The Max Pool size and Max object number are defined as follow:
+
+```
+#define MAX_BUF_SIZE 8192
+#define MAX_BUF_GROW 32
+```
+When client invoke `Pool_alloc`, we return `pBuffer` which has already been allocate to client.
+
+Further more, in order to improve the system's performance due to the way the CPU handles memory. We using a alignment when arrange buffers.
+
+```
+// 64 bits alignment
+#define ALIGNMENT (sizeof(long long) - 1)
+
+pBuf = (struct Buffer *)malloc((pPool->objSize + ALIGNMENT) * pPool->growSize
+                                                 + sizeof(struct Buffer));
+```
 
 
 # WIP
   - [ ] Codes need validation.  
-  - [ ] Fullfill how to section, maybe add some diagrams.
+  - [x] Fullfill how to section, maybe add some diagrams.
   - [ ] Create A better makefile 
   - [ ] Reorganize the source
+  - [ ] Make Object Pool to be a dynamic growing pool 
