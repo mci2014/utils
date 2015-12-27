@@ -106,7 +106,7 @@ inline void List_addTail(UTIL_LIST *list, void *item) {
 
 }
 
-/** At an item to the head of the given list
+/** Add an item to the head of the given list
  *
  * @param item The item to be added
  * @param list The list where item add to
