@@ -117,7 +117,7 @@ int Pool_destory(Pool * const pPool) {
 /*******************************************************************************
  @Description
 
- Allocate an Object from an Object sPool.
+ Allocate/fetch an Object from an Object sPool.
 
  @Input	    pPool      : Object Pool
 
