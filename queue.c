@@ -42,7 +42,7 @@ int DQUEUE_empty(DQUEUE_T *dqueue) {
     return (dqueue->DQUEUE_link.nelem == 0);
 }
 
-/* Get the number of elements the queue hold
+/* Get the number of elements hold by the queue
  * @param dqueue The given Doubly linked queue
  * @return Number of elements that dqueue hold
  */
