@@ -1,10 +1,10 @@
 /*****************************************************************************
 *
-* @File       list.c
+* @File       testlist.c
 *
-* @Author     archersmind
+* @Author     Alan Wang
 *
-* @Purpose    Implements a simple linked list
+* @Purpose    Test unit for simple linked list
 *
 * The MIT License (MIT)
 * https://opensource.org/licenses/MIT

@@ -2,7 +2,7 @@
  *
  * @File       queue.c
  *
- * @Author     archersmind
+ * @Author     Alan Wang
  *
  * @Purpose    Implements a simple Doubly linked queue
  *

@@ -1,3 +1,16 @@
+/*****************************************************************************
+*
+* @File       testqueue.c
+*
+* @Author     Alan Wang
+*
+* @Purpose    Test unit for Doubly linked queue
+*
+* The MIT License (MIT)
+* https://opensource.org/licenses/MIT
+*
+*****************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -2,7 +2,7 @@
  *
  * @File       pool.h
  *
- * @Author     archersmind
+ * @Author     Alan Wang
  *
  * @Purpose    Implements a simple object pool
  *
