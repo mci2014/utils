@@ -10,13 +10,15 @@
  * https://opensource.org/licenses/MIT
  *
  *****************************************************************************/
+#ifndef __POOL_H__
+#define __POOL_H__
+
+#include "util_error_n_types.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 
-#ifndef __POOL_H__
-#define __POOL_H__
 
 #define MAX_BUF_SIZE 8192
 #define MAX_BUF_GROW 32
@@ -46,16 +48,16 @@ typedef struct Pool {
 } Pool;
 
 // Pool Create
-int Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool);
+UTIL_RESULT Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool);
 
 // Pool destory
-int Pool_destory(Pool * const pPool);
+UTIL_RESULT Pool_destory(Pool * const pPool);
 
 // Alloc object from the pool
-int Pool_alloc(Pool * const pPool, void **const ppObj);
+UTIL_RESULT Pool_alloc(Pool * const pPool, void **const ppObj);
 
 // Free object from the pool
-int Pool_free(Pool * const pPool, void * const pObj);
+UTIL_RESULT Pool_free(Pool * const pPool, void * const pObj);
 
 #if defined (__cplusplus)
 }

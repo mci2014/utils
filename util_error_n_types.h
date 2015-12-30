@@ -10,12 +10,14 @@
  * https://opensource.org/licenses/MIT
  *
  *****************************************************************************/
-#ifdef _UTIL_ERROR_H_
-#define _UTIL_ERROR_H_
+#ifndef _UTIL_ERROR_N_TYPES_H_
+#define _UTIL_ERROR_N_TYPES_H_
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
+typedef int UTIL_RESULT;
+typedef int UTIL_BOOL;
+
+#define UTIL_TRUE  1
+#define UTIL_FALSE 0
 
 #define	UTIL_SUCCESS                                             (0)
 #define UTIL_ERROR_MALLOC_FAILED                                 (1)
@@ -28,9 +30,5 @@ extern "C" {
 #define	UTIL_ERROR_ALREADY_INITIALISED                           (8)
 #define	UTIL_ERROR_VALUE_OUT_OF_RANGE                            (9)
 #define UTIL_ERROR_NOT_SUPPORTED                                 (10)
-
-#if defined (__cplusplus)
-    }
-#endif
 
 #endif

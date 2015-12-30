@@ -30,16 +30,16 @@
  @Return    0 for successed others indicate error occured
 
 *******************************************************************************/
-int Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool) {
+UTIL_RESULT Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool) {
 
     Pool * pPool    = NULL;
-    uint32_t result = 0;
+    UTIL_RESULT result = UTIL_SUCCESS;
 
     assert(pName != NULL);
     assert(ppPool != NULL);
     if (pName == NULL || ppPool == NULL) {
         // Invaild param
-        result = -1;
+        result = -UTIL_ERROR_INVALID_PARAMETERS;
         return result;
     }
     
@@ -48,7 +48,7 @@ int Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool) {
     assert(pPool != NULL);
     if (pPool == NULL) {
         // malloc failed
-        result = -2;
+        result = -UTIL_ERROR_MALLOC_FAILED;
         return result;
     }
 
@@ -80,16 +80,16 @@ int Pool_create(const char * pName, uint32_t objSize, Pool ** const ppPool) {
 
  @Return    0 for successed others indicate error occured
 ********************************************************************************/
-int Pool_destory(Pool * const pPool) {
+UTIL_RESULT Pool_destory(Pool * const pPool) {
 
     struct Buffer *pBufs    = NULL;
     struct Buffer *pTempBuf = NULL;
-    uint32_t result         = 0;
+    UTIL_RESULT result      = UTIL_SUCCESS;
 
     assert (pPool != NULL);
     if (pPool == NULL) {
         // Invaild param
-        result = -1;
+        result = -UTIL_ERROR_INVALID_PARAMETERS;
         return result;
     }
 
@@ -126,20 +126,20 @@ int Pool_destory(Pool * const pPool) {
 
  @Return    0 for successed others indicate error occured
 *******************************************************************************/
-int Pool_alloc(Pool * const pPool, void ** const ppObj) {
+UTIL_RESULT Pool_alloc(Pool * const pPool, void ** const ppObj) {
 
     struct Buffer *pBuf = NULL;
     struct Object *pObj = NULL;
 
-    uint32_t index  = 0;
-    uint32_t result = 0;
+    uint32_t    index  = 0;
+    UTIL_RESULT result = UTIL_SUCCESS;
 
     assert(pPool != NULL);
     assert(ppObj != NULL);
 
     if (pPool == NULL || ppObj == NULL) {
         // Invalid param
-        result = -1;
+        result = -UTIL_ERROR_INVALID_PARAMETERS;
         return result;
     }
 
@@ -151,7 +151,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
         assert(pBuf != NULL);
         if (pBuf == NULL) {
             // lack of memory
-            result = -2;
+            result = -UTIL_ERROR_MALLOC_FAILED;
             return result;
         }
 
@@ -181,7 +181,7 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
 
     if (pPool->pObjs == NULL) {
         // Invalid state
-        result = -3;
+        result = -UTIL_ERROR_UNEXPECTED_STATE;
         return result;
     }
 
@@ -206,13 +206,13 @@ int Pool_alloc(Pool * const pPool, void ** const ppObj) {
 int Pool_free(Pool * const pPool, void * const hObj) {
 
     struct Object * pObj = NULL;
-    uint32_t result = 0;
+    UTIL_RESULT result   = UTIL_SUCCESS;
 
     assert(pPool != NULL);
     assert(hObj != NULL);
     if (pPool == NULL || hObj == NULL) {
         // Invalid param
-        result = -1;
+        result = -UTIL_ERROR_INVALID_PARAMETERS;
         return result;
     }
 

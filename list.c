@@ -78,7 +78,7 @@ inline void *List_tail(UTIL_LIST *list) {
  *         1-->Empty
  *
  */
-inline int List_empty(UTIL_LIST *list) {
+inline UTIL_BOOL List_empty(UTIL_LIST *list) {
     return (list->first == NULL);
 }
 

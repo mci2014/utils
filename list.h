@@ -14,6 +14,12 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
+#if defined (__cplusplus)
+extern "C" {
+#endif
+
+#include "util_error_n_types.h"
+
 /**
  * If you want linked list some struct
  * Put LST_LINK the beginning of your struct
@@ -23,10 +29,6 @@
 /* Private */
 /* Outsider have no ideal what LINK_LIST really is */
 typedef void **LINKAGE_TYPE;
-
-#if defined (__cplusplus)
-extern "C" {
-#endif
 
 typedef struct UTIL_LIST {
 
@@ -49,7 +51,7 @@ inline void *List_head(UTIL_LIST *list);
 inline void *List_tail(UTIL_LIST *list);
 
 // Tell if the list is empty
-inline int List_empty(UTIL_LIST *list);
+inline UTIL_BOOL List_empty(UTIL_LIST *list);
 
 // Add item to tail
 inline void List_addTail(UTIL_LIST *list, void *item);

@@ -34,7 +34,7 @@ void DQUEUE_init(DQUEUE_T *dqueue) {
  * @return 1 (empty)
  *         0 (not empty)
  */
-int DQUEUE_empty(DQUEUE_T *dqueue) {
+UTIL_BOOL DQUEUE_empty(DQUEUE_T *dqueue) {
 
     assert(dqueue->DQUEUE_link.prev != NULL);
     assert(dqueue->DQUEUE_link.next != NULL);
@@ -58,20 +58,20 @@ int DQUEUE_count(DQUEUE_T *dqueue) {
  *
  * @return -1 if error happened
  */
-int DQUEUE_enqueue(DQUEUE_T *dqueue, void *item) {
+UTIL_RESULT DQUEUE_enqueue(DQUEUE_T *dqueue, void *item) {
 
     assert(dqueue->DQUEUE_link.prev != NULL);
     assert(dqueue->DQUEUE_link.next != NULL);
 
     // See if the queue is full
     if (dqueue->DQUEUE_link.nelem >= MAX_ELEMENTS_IN_QUEUE) {
-        return -1;
+        return -UTIL_ERROR_VALUE_OUT_OF_RANGE;
     }
 
     // See if the queue is damaged
     if (dqueue->DQUEUE_link.prev == NULL ||
             dqueue->DQUEUE_link.next == NULL) {
-        return -1;
+        return -UTIL_ERROR_FATAL;
     }
 
     ((DQUEUE_LINKAGE_TYPE *)item)->prev = dqueue->DQUEUE_link.prev;
@@ -81,7 +81,7 @@ int DQUEUE_enqueue(DQUEUE_T *dqueue, void *item) {
 
     ((DQUEUE_LINKAGE_TYPE *)dqueue)->nelem++;
 
-    return 0;
+    return UTIL_SUCCESS;
 }
 
 /* Dequeue an element from the given queue descriptor

@@ -18,6 +18,8 @@
 extern "C" {
 #endif
 
+#include "util_error_n_types.h"
+
 #define DLINK_QUEUE DQUEUE_LINKAGE_TYPE DQUEUE_link
 
 // The MAX elements in a queue
@@ -39,13 +41,13 @@ typedef struct {
 void DQUEUE_init(DQUEUE_T *dqueue);
 
 // If the queue is empty?
-int DQUEUE_empty(DQUEUE_T *dqueue);
+UTIL_BOOL DQUEUE_empty(DQUEUE_T *dqueue);
 
 // The number of the elements in queue
 int DQUEUE_count(DQUEUE_T *dqueue);
 
 // Enqueue(to tail) a item to the given queue
-int DQUEUE_enqueue(DQUEUE_T *dqueue, void *item);
+UTIL_RESULT DQUEUE_enqueue(DQUEUE_T *dqueue, void *item);
 
 // Dequeue(from head) a item from the given queue
 void *DQUEUE_dequeue(DQUEUE_T *dqueue);
