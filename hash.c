@@ -54,3 +54,28 @@ static uint32_t hashFunc(
 	ui32Hash &= (ui32Size-1);
 	return ui32Hash;
 }
+
+/*!
+******************************************************************************
+
+ @Function				hashRehash
+
+ @Description
+
+ Iterate over every entry in an old hash table and rehash into the new table.
+
+ @Input	    ppsOldTable : The old hash table
+
+ @Input	    ui32OldSize : The size of the old hash table
+
+ @Input	    ppsNewTable : The new hash table
+
+ @Input	    ui32NewSize : The size of the new hash table
+
+ @Return    UTIL_RESULT  : UTIL_SUCCESS or an error code.
+
+********************************************************************************/
+
+static UTIL_RESULT hashRehash() {
+
+}
