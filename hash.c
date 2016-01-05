@@ -10,6 +10,8 @@
 * https://opensource.org/licenses/MIT
 *
 *****************************************************************************/
+#include <assert.h>
+
 #include "hash.h"
 
 #include "pool.h"
@@ -58,6 +60,59 @@ static uint32_t hashFunc(
 /*!
 ******************************************************************************
 
+ @Function				hash_Insert
+
+ @Description
+
+ Insert an intem to the Hash table.
+
+ @Input	    pBucket    : The sBucket
+
+ @Input	    ppTable    : The hash table
+
+ @Input	    ui32Size    : The size of the hash table
+
+ @Return    UTIL_RESULT  : UTIL_SUCCESS or an error code.
+
+********************************************************************************/
+static UTIL_RESULT hash_Insert(
+        struct sBucket * pBucket,
+        struct sHash  ** ppsTable,
+        uint32_t ui32Size) {
+
+    UTIL_RESULT res = UTIL_SUCCESS;
+    uint32_t ui32Index;
+
+    assert(pBucket  != NULL);
+    assert(ppsTable != NULL);
+    assert(ui32Size != 0)
+
+    if (pBucket == NULL ||
+        ppsTable == NULL ||
+        ui32Size == NULL) {
+        res = -UTIL_ERROR_INVALID_PARAMETERS;
+        return res;
+    }
+
+    ui32Index = hashFunc(pBucket->u64Key, ui32Size);
+
+    assert(ui32Index <= ui32Size);
+
+    if (ui32Index > ui32Index) {
+        res = -UTIL_ERROR_FATAL;
+        return res;
+    } else {
+        res = UTIL_SUCCESS;
+        pBucket->pNext = ppsTable[ui32Index];
+        ppsTable[ui32Index] = pBucket;
+    }
+
+    return res;
+}
+
+/*!
+******************************************************************************
+
  @Function				hashRehash
 
  @Description
@@ -76,6 +131,22 @@ static uint32_t hashFunc(
 
 ********************************************************************************/
 
-static UTIL_RESULT hashRehash() {
+static UTIL_RESULT hashRehash(
+        struct sHash ** ppsOldTable,
+        uint32_t ui32OldSize,
+        struct sHash ** ppsNewTable,
+        uint32_t ui32NewSize) {
+
+    UTIL_RESULT res    = UTIL_SUCCESS;
+    uint32_t ui32Index = 0;
+
+    assert(ppsOldTable != NULL);
+    assert(ppsNewTable != NULL);
+
+    if (ppsOldTable == NULL ||
+            ppsNewTable == NULL) {
+        res = -UTIL_ERROR_INVALID_PARAMETERS;
+        return res;
+    }
 
 }
