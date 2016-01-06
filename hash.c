@@ -149,4 +149,162 @@ static UTIL_RESULT hashRehash(
         return res;
     }
 
+    for (ui32Index = 0; ui32Index < ui32OldSize; ui32Index++) {
+
+        struct sBucket *pCurrent;
+        struct sBucket *pNext;
+
+        pCurrent = ppsOldTable[ui32Index];
+        while (pCurrent != NULL) {
+            pNext = pCurrent->pNext;
+            res = hash_Insert(pCurrent, ppsNewTable, ui32NewSize);
+            assert(res == UTIL_SUCCESS);
+            if (res != UTIL_SUCCESS) {
+                return res;
+            }
+            pCurrent = pNext;
+        }
+    }
+
+    return res;
+}
+
+static UTIL_RESULT hashResize(
+        struct sHash * psHash,
+        uint32_t ui32NewSize) {
+
+    UTIL_RESULT res = UTIL_SUCCESS;
+
+    assert (psHash != NULL);
+    if (psHash == NULL) {
+        res = -UTIL_ERROR_INVALID_PARAMETERS;
+        return res;
+    }
+
+    if (ui32NewSize == psHash->ui32Size)
+        return res;
+
+    while (ui32NewSize != psHash->ui32Size) {
+
+        struct sBucket ** ppNewTable;
+        ppNewTable = (struct sBucket **)
+                        malloc(sizeof(struct sBucket *) * ui32NewSize);
+
+        assert(ppNewTable != NULL);
+        if (!ppNewTable) {
+            res = -UTIL_ERROR_MALLOC_FAILED;
+            break;
+        }
+
+        if (ppNewTable != NULL) {
+            uint32_t ui32Index;
+
+            for (ui32Index = 0; ui32Index < ui32NewSize; ui32Index++) {
+                ppNewTable[ui32Index] = NULL;
+            }
+
+            res = hashRehash(psHash->ppsTable,
+                             psHash->ui32Size,
+                             ppNewTable,
+                             ui32NewSize);
+
+            if (res != UTIL_SUCCESS) {
+                free(ppNewTable);
+                ppNewTable = NULL;
+                res = -UTIL_ERROR_UNEXPECTED_STATE;
+                break;
+            } else {
+                if (psHash->ppsTable) {
+                    free(psHash->ppsTable);
+                    psHash->ppsTable = NULL;
+                }
+                psHash->ui32Size = ui32NewSize;
+                psHash->ppsTable = ppNewTable;
+                res = UTIL_SUCCESS;
+                break;
+            }
+        }
+    }
+
+    return res;
+}
+
+UTIL_RESULT HASH_Init() {
+
+    UTIL_RESULT res = UTIL_SUCCESS;
+    assert(gbInitialised == UTIL_FALSE);
+
+    if (gbInitialised == UTIL_TRUE) {
+        res = -UTIL_ERROR_ALREADY_INITIALISED;
+        return res;
+    }
+
+    while (!gbInitialised) {
+        assert(gpHashPool == NULL);
+        assert(gpBucketPool == NULL);
+
+        if (gpHashPool != NULL ||
+                gpBucketPool != NULL) {
+            res = -UTIL_ERROR_UNEXPECTED_STATE;
+            break;
+        }
+
+        res = Pool_create("hash", sizeof(struct sHash), &gpHashPool);
+        assert (res == UTIL_SUCCESS);
+        if (res != UTIL_SUCCESS) {
+            res = -UTIL_ERROR_UNEXPECTED_STATE;
+            break;
+        }
+
+        res = Pool_create("bucket", sizeof(struct sBucket), &gpBucketPool);
+        assert (res == UTIL_SUCCESS);
+        if (res != UTIL_SUCCESS) {
+            res = -UTIL_ERROR_UNEXPECTED_STATE;
+            break;
+        } else {
+            gbInitialised = UTIL_TRUE;
+            res = UTIL_SUCCESS;
+            break;
+        }
+    }
+
+    return res;
+}
+
+UTIL_RESULT HASH_Deinit() {
+
+    UTIL_RESULT res = UTIL_SUCCESS;
+    assert(gbInitialised == UTIL_TRUE);
+
+    if (gbInitialised == UTIL_FALSE) {
+        res = -UTIL_ERROR_NOT_INITIALISED;
+        return res;
+    }
+
+    while (gbInitialised) {
+        if (gpHashPool) {
+            res = Pool_destory(gpHashPool);
+            assert(res == UTIL_SUCCESS);
+
+            if (res != UTIL_SUCCESS) {
+                res = -UTIL_ERROR_UNEXPECTED_STATE;
+                break;
+            }
+        }
+
+        if (gpBucketPool) {
+            res = Pool_destory(gpBucketPool);
+            assert(res == UTIL_SUCCESS);
+
+            if (res != UTIL_SUCCESS) {
+                res = -UTIL_ERROR_UNEXPECTED_STATE;
+                break;
+            }
+        }
+
+        break;
+    }
+
+    gbInitialised = UTIL_TRUE;
+    return res;
 }
