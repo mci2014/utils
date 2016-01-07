@@ -203,7 +203,7 @@ UTIL_RESULT Pool_alloc(Pool * const pPool, void ** const ppObj) {
 
  @Return    0 for successed others indicate error occured
 *******************************************************************************/
-int Pool_free(Pool * const pPool, void * const hObj) {
+UTIL_RESULT Pool_free(Pool * const pPool, void * const hObj) {
 
     struct Object * pObj = NULL;
     UTIL_RESULT result   = UTIL_SUCCESS;
