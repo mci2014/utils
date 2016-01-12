@@ -6,7 +6,7 @@ Utils in c that working with Linux
 - [x] Doubly linked Queue
 - [ ] Message Pool
 - [ ] Tree
-- [ ] Hash
+- [x] Hash
 - [x] Pool
 
 ## Single Linked List
