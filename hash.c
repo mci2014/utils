@@ -77,7 +77,7 @@ static uint32_t hashFunc(
 ********************************************************************************/
 static UTIL_RESULT hashInsert(
         struct sBucket * pBucket,
-        struct sHash  ** ppsTable,
+        struct sBucket ** ppsTable,
         uint32_t ui32Size) {
 
     UTIL_RESULT res = UTIL_SUCCESS;
@@ -85,11 +85,11 @@ static UTIL_RESULT hashInsert(
 
     assert(pBucket  != NULL);
     assert(ppsTable != NULL);
-    assert(ui32Size != 0)
+    assert(ui32Size != 0);
 
     if (pBucket == NULL ||
         ppsTable == NULL ||
-        ui32Size == NULL) {
+        ui32Size == 0) {
         res = -UTIL_ERROR_INVALID_PARAMETERS;
         return res;
     }
@@ -132,9 +132,9 @@ static UTIL_RESULT hashInsert(
 ********************************************************************************/
 
 static UTIL_RESULT hashRehash(
-        struct sHash ** ppsOldTable,
+        struct sBucket ** ppsOldTable,
         uint32_t ui32OldSize,
-        struct sHash ** ppsNewTable,
+        struct sBucket ** ppsNewTable,
         uint32_t ui32NewSize) {
 
     UTIL_RESULT res    = UTIL_SUCCESS;
@@ -340,7 +340,7 @@ UTIL_RESULT HASH_Create(uint32_t ui32InitialSize,
         psHash->ui32Count       = 0;
         psHash->ui32MinimumSize = ui32InitialSize;
 
-        psHash->ppsTable = (struct sHash **)
+        psHash->ppsTable = (struct sBucket **)
                             malloc(sizeof(struct sBucket *) * ui32InitialSize);
 
         if (psHash->ppsTable == NULL) {
